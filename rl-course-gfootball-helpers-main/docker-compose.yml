@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  gfootball:
+    build:
+      context: ../football  # Build context is the football folder
+      dockerfile: Dockerfile  # Dockerfile path relative to context
+    image: gfootball:latest
+    container_name: gfootball-dev
+    user: "${UID:-1000}:${GID:-1000}"
+    # Add any volumes, ports, environment variables, etc. as needed
+    volumes:
+      - ./:/RL  # Map current folder to /dev inside the container for live development
+    # ports:
+    #   - "6006:6006"  # Example: TensorBoard port
+    # environment:
+    #   - DISPLAY=${DISPLAY}
+    #   - NVIDIA_VISIBLE_DEVICES=all
+    #   - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
