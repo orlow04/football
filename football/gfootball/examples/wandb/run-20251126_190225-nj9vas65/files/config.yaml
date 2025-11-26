@@ -1,0 +1,30 @@
+_wandb:
+    value:
+        cli_version: 0.23.0
+        e:
+            cqblekqr6hbe9g5l5bdzmsrlt3k7gorm:
+                codePath: tools/upload_wandb.py
+                email: gabrielorlow@discente.ufg.br
+                executable: /Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+                git:
+                    commit: 268f805b644d504b1298ea96418866dff22f8183
+                    remote: git@github.com:orlow04/football.git
+                host: macbook-pro-orlow.local
+                os: macOS-26.1-arm64-arm-64bit
+                program: /Users/orlow/dev/rl/final/getafe-ball/tools/upload_wandb.py
+                python: CPython 3.12.5
+                root: /Users/orlow/dev/rl/final/getafe-ball/football/gfootball/examples
+                startedAt: "2025-11-26T22:02:25.011959Z"
+                writerId: cqblekqr6hbe9g5l5bdzmsrlt3k7gorm
+        m: []
+        python_version: 3.12.5
+        t:
+            "3":
+                - 2
+                - 16
+            "4": 3.12.5
+            "5": 0.23.0
+            "12": 0.23.0
+            "13": darwin-arm64
+trial_dir:
+    value: /root/ray_results/PPO_Defensive_5v5/PPO_gfootball_defensive_a8710_00000_0_2025-11-26_19-46-53

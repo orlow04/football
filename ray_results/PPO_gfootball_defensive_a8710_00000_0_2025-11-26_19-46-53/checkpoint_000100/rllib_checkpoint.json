@@ -1,0 +1,1 @@
+{"type": "Algorithm", "checkpoint_version": "1.1", "format": "cloudpickle", "state_file": "/root/ray_results/PPO_Defensive_5v5/PPO_gfootball_defensive_a8710_00000_0_2025-11-26_19-46-53/checkpoint_000100/algorithm_state.pkl", "policy_ids": ["defensive_policy"], "ray_version": "2.5.0", "ray_commit": "586c376e0769082cb5cfa1333e8264a5fa6b73ec"}

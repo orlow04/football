@@ -1,0 +1,36 @@
+{
+  "os": "macOS-26.1-arm64-arm-64bit",
+  "python": "CPython 3.12.5",
+  "startedAt": "2025-11-26T22:04:16.347125Z",
+  "program": "/Users/orlow/dev/rl/final/getafe-ball/tools/upload_wandb.py",
+  "codePath": "tools/upload_wandb.py",
+  "git": {
+    "remote": "git@github.com:orlow04/football.git",
+    "commit": "268f805b644d504b1298ea96418866dff22f8183"
+  },
+  "email": "gabrielorlow@discente.ufg.br",
+  "root": "/Users/orlow/dev/rl/final/getafe-ball/football/gfootball/examples",
+  "host": "macbook-pro-orlow.local",
+  "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+  "cpu_count": 11,
+  "cpu_count_logical": 11,
+  "disk": {
+    "/": {
+      "total": "494384795648",
+      "used": "319975084032"
+    }
+  },
+  "memory": {
+    "total": "19327352832"
+  },
+  "apple": {
+    "name": "Apple M3 Pro",
+    "ecpuCores": 6,
+    "pcpuCores": 5,
+    "gpuCores": 14,
+    "memoryGb": 18,
+    "swapTotalBytes": "4294967296",
+    "ramTotalBytes": "19327352832"
+  },
+  "writerId": "jj4g2tzkp6yupr5xun0cjvdzp5w1sp8u"
+}
