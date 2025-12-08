@@ -13,18 +13,20 @@ from ray import tune
 from ray.rllib.env.multi_agent_env import MultiAgentEnv
 from ray.tune.registry import register_env
 
+# Argument parser
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--num-iters', type=int, default=10000)
 parser.add_argument('--checkpoint-freq', type=int, default=100)
 parser.add_argument('--self-play', action='store_true', help='Enable self-play training')
 parser.add_argument('--simple', action='store_true')
 
-
+# Multi-Agent Environment with Defensive Reward Shaping
 class DefensiveGFootball5v5(MultiAgentEnv):
     """
     5v5 Multi-Agent Environment with Defensive Reward Shaping.
     
-    Reward Structure:
+    Reward Structure - Defensive Focus:
     - Goal conceded: -10.0 (massive penalty)
     - Goal scored: +1.0 (small reward, not the focus)
     - Clean sheet bonus: +5.0 per episode without conceding
@@ -36,12 +38,12 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         super().__init__()
         self.num_left_agents = num_left_agents
         self.num_right_agents = num_right_agents
-        self.num_agents = num_left_agents + num_right_agents
+        self._num_agents = num_left_agents + num_right_agents
         
-        # Create environment - use stacked=False for simpler obs shape
+        # Create environment 
         self.env = football_env.create_environment(
             env_name='5_vs_5',
-            stacked=False,  # Changed to False for 115-dim obs
+            stacked=False,  
             representation='simple115v2',
             logdir=os.path.join(tempfile.gettempdir(), 'defensive_5v5'),
             write_goal_dumps=False,
@@ -66,7 +68,7 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         
         # Get the actual observation shape from a reset
         test_obs = self.env.reset()
-        if self.num_agents > 1:
+        if self._num_agents > 1:
             single_obs = test_obs[0]
         else:
             single_obs = test_obs
@@ -99,7 +101,7 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         
         try:
             if isinstance(obs_raw, (list, np.ndarray)):
-                if self.num_agents > 1:
+                if self._num_agents > 1:
                     obs = obs_raw[0] if len(obs_raw) > 0 else obs_raw
                 else:
                     obs = obs_raw
@@ -147,9 +149,8 @@ class DefensiveGFootball5v5(MultiAgentEnv):
                         reward += 0.5
             
             # Possession in defensive third
-            if is_left_team:
-                if ball_owned_team == 0 and ball_x < -0.3:
-                    reward += 0.1
+            if is_left_team and ball_owned_team == 0 and ball_x > -0.1:
+                reward += 0.05 
             else:
                 if ball_owned_team == 1 and ball_x > 0.3:
                     reward += 0.1
@@ -186,7 +187,7 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         idx = 0
         for i in range(self.num_left_agents):
             agent_id = f'left_{i}'
-            if self.num_agents > 1:
+            if self._num_agents > 1:
                 obs[agent_id] = np.array(original_obs[idx], dtype=np.float32)
             else:
                 obs[agent_id] = np.array(original_obs, dtype=np.float32)
@@ -195,7 +196,7 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         
         for i in range(self.num_right_agents):
             agent_id = f'right_{i}'
-            if self.num_agents > 1:
+            if self._num_agents > 1:
                 obs[agent_id] = np.array(original_obs[idx], dtype=np.float32)
             else:
                 obs[agent_id] = np.array(original_obs, dtype=np.float32)
@@ -228,7 +229,7 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         idx = 0
         for i in range(self.num_left_agents):
             agent_id = f'left_{i}'
-            if self.num_agents > 1:
+            if self._num_agents > 1:
                 obs[agent_id] = np.array(o[idx], dtype=np.float32)
             else:
                 obs[agent_id] = np.array(o, dtype=np.float32)
@@ -239,7 +240,7 @@ class DefensiveGFootball5v5(MultiAgentEnv):
         
         for i in range(self.num_right_agents):
             agent_id = f'right_{i}'
-            if self.num_agents > 1:
+            if self._num_agents > 1:
                 obs[agent_id] = np.array(o[idx], dtype=np.float32)
             else:
                 obs[agent_id] = np.array(o, dtype=np.float32)
@@ -333,11 +334,11 @@ if __name__ == '__main__':
         'clip_rewards': False,
         'vf_clip_param': 10.0,
         'entropy_coeff': 0.005,
-        'train_batch_size': 4000,
-        'sgd_minibatch_size': 512,
+        'train_batch_size': 16000,
+        'sgd_minibatch_size': 1024,
         'num_sgd_iter': 15,
-        'num_workers': 0,
-        'num_envs_per_worker': 1,
+        'num_workers': 4,
+        'num_envs_per_worker': 4,
         'num_gpus': 0,
         'batch_mode': 'truncate_episodes',
         'observation_filter': 'NoFilter',

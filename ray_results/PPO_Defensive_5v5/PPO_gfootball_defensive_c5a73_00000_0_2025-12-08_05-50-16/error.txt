@@ -1,0 +1,45 @@
+Failure # 1 (occurred at 2025-12-08_05-50-18)
+The actor died because of an error raised in its creation task, [36mray::PPO.__init__()[39m (pid=1133, ip=172.17.0.2, actor_id=b05602adba6ef3936a51062b01000000, repr=PPO)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/algorithm.py", line 533, in __init__
+    super().__init__(
+  File "/usr/local/lib/python3.8/dist-packages/ray/tune/trainable/trainable.py", line 161, in __init__
+    self.setup(copy.deepcopy(self.config))
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/algorithm.py", line 631, in setup
+    self.workers = WorkerSet(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/worker_set.py", line 159, in __init__
+    self._setup(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/worker_set.py", line 250, in _setup
+    self._local_worker = self._make_worker(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/worker_set.py", line 1016, in _make_worker
+    worker = cls(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/rollout_worker.py", line 535, in __init__
+    self._update_policy_map(policy_dict=self.policy_dict)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/rollout_worker.py", line 1743, in _update_policy_map
+    self._build_policy_map(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/rollout_worker.py", line 1854, in _build_policy_map
+    new_policy = create_policy_for_framework(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/utils/policy.py", line 141, in create_policy_for_framework
+    return policy_class(observation_space, action_space, merged_config)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/ppo/ppo_torch_policy.py", line 64, in __init__
+    self._initialize_loss_from_dummy_batch()
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/policy/policy.py", line 1396, in _initialize_loss_from_dummy_batch
+    actions, state_outs, extra_outs = self.compute_actions_from_input_dict(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/policy/torch_policy_v2.py", line 557, in compute_actions_from_input_dict
+    return self._compute_action_helper(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/utils/threading.py", line 24, in wrapper
+    return func(self, *a, **k)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/policy/torch_policy_v2.py", line 1260, in _compute_action_helper
+    dist_inputs, state_out = self.model(input_dict, state_batches, seq_lens)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/models/modelv2.py", line 244, in __call__
+    input_dict["obs"], self.obs_space, self.framework
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/policy/sample_batch.py", line 951, in __getitem__
+    self.intercepted_values[key] = self.get_interceptor(value)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/utils/torch_utils.py", line 262, in convert_to_torch_tensor
+    return tree.map_structure(mapping, x)
+  File "/usr/local/lib/python3.8/dist-packages/tree/__init__.py", line 435, in map_structure
+    [func(*args) for args in zip(*map(flatten, structures))])
+  File "/usr/local/lib/python3.8/dist-packages/tree/__init__.py", line 435, in <listcomp>
+    [func(*args) for args in zip(*map(flatten, structures))])
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/utils/torch_utils.py", line 251, in mapping
+    tensor = torch.from_numpy(item)
+RuntimeError: Numpy is not available

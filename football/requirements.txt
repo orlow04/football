@@ -6,3 +6,7 @@ numpy
 gym<=0.21.0
 absl-py
 wheel
+gymnasium<=0.28.1
+ray[rllib]==2.6.2
+dm-tree==0.1.7
+torch==2.0.1

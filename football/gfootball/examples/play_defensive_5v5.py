@@ -148,13 +148,22 @@ if __name__ == '__main__':
             steps += 1
         
         # Get final score
-        if 'score' in info:
-            left_score, right_score = info['score']
+        # Get final score from info
+        try:
+            score_reward = info.get('score_reward', 0)
+            # score_reward format: (left_goals, right_goals) or similar
+            if isinstance(score_reward, (tuple, list)) and len(score_reward) >= 2:
+                left_score, right_score = score_reward[0], score_reward[1]
+            else:
+                # If it's just a scalar, estimate from reward
+                left_score = max(0, int(score_reward)) if score_reward > 0 else 0
+                right_score = max(0, int(-score_reward)) if score_reward < 0 else 0
+            
             total_goals_scored += left_score
             total_goals_conceded += right_score
             print(f"Episode {episode + 1}: Steps={steps}, Score={left_score}-{right_score}")
-        else:
-            print(f"Episode {episode + 1}: Steps={steps}, Reward={total_reward:.2f}")
+        except Exception as e:
+            print(f"Episode {episode + 1}: Steps={steps}, Reward={total_reward:.2f} (error: {e})")
     
     eval_env.close()
     algo.stop()

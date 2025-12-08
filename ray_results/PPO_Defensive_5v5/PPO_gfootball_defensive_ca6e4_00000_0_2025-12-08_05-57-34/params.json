@@ -1,0 +1,46 @@
+{
+  "batch_mode": "truncate_episodes",
+  "clip_rewards": false,
+  "disable_env_checking": true,
+  "entropy_coeff": 0.005,
+  "env": "gfootball_defensive",
+  "framework": "torch",
+  "kl_coeff": 0.2,
+  "lambda": 0.95,
+  "log_level": "WARN",
+  "lr": 0.0001,
+  "multiagent": {
+    "policies": {
+      "defensive_policy": [
+        null,
+        "Box(-inf, inf, (115,), float32)",
+        "Discrete(19)",
+        {
+          "gamma": 0.995
+        }
+      ],
+      "opponent_policy": [
+        null,
+        "Box(-inf, inf, (115,), float32)",
+        "Discrete(19)",
+        {
+          "gamma": 0.99
+        }
+      ]
+    },
+    "policies_to_train": [
+      "defensive_policy"
+    ],
+    "policy_mapping_fn": "<function policy_mapping_fn at 0xffffa42caf70>"
+  },
+  "num_envs_per_worker": 4,
+  "num_gpus": 0,
+  "num_sgd_iter": 15,
+  "num_workers": 4,
+  "observation_filter": "NoFilter",
+  "sgd_minibatch_size": 1024,
+  "simple_optimizer": false,
+  "train_batch_size": 16000,
+  "vf_clip_param": 10.0,
+  "vf_share_layers": true
+}
