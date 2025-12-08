@@ -10,3 +10,4 @@ gymnasium<=0.28.1
 ray[rllib]==2.6.2
 dm-tree==0.1.7
 torch==2.0.1
+lz4==4.3.2
