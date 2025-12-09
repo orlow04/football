@@ -1,0 +1,30 @@
+{
+  "callbacks": "<class '__main__.SelfPlayUpdateCallback'>",
+  "env": "gfootball_defensive",
+  "framework": "torch",
+  "multiagent": {
+    "policies": {
+      "defensive_policy": [
+        null,
+        "Box(-inf, inf, (115,), float32)",
+        "Discrete(19)",
+        {}
+      ],
+      "opponent_policy": [
+        null,
+        "Box(-inf, inf, (115,), float32)",
+        "Discrete(19)",
+        {}
+      ]
+    },
+    "policies_to_train": [
+      "defensive_policy"
+    ],
+    "policy_mapping_fn": "<function policy_mapping_fn at 0x7897d68f54c0>"
+  },
+  "num_envs_per_worker": 4,
+  "num_gpus": 1,
+  "num_workers": 14,
+  "sgd_minibatch_size": 1024,
+  "train_batch_size": 8000
+}

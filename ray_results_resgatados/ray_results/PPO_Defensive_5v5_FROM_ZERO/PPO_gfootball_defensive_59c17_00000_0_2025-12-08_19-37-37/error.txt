@@ -1,0 +1,42 @@
+Failure # 1 (occurred at 2025-12-08_19-37-41)
+[36mray::PPO.train()[39m (pid=2507, ip=172.17.0.2, actor_id=a7db1afd29a895da73e990c001000000, repr=PPO)
+  File "/usr/local/lib/python3.8/dist-packages/ray/tune/trainable/trainable.py", line 334, in train
+    raise skipped from exception_cause(skipped)
+  File "/usr/local/lib/python3.8/dist-packages/ray/tune/trainable/trainable.py", line 331, in train
+    result = self.step()
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/algorithm.py", line 849, in step
+    results, train_iter_ctx = self._run_one_training_iteration()
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/algorithm.py", line 3194, in _run_one_training_iteration
+    results = self.training_step()
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/ppo/ppo.py", line 410, in training_step
+    return self._training_step_old_and_hybrid_api_stacks()
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/algorithms/ppo/ppo.py", line 495, in _training_step_old_and_hybrid_api_stacks
+    train_batch = synchronous_parallel_sample(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/execution/rollout_ops.py", line 88, in synchronous_parallel_sample
+    sampled_data = worker_set.foreach_worker(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/worker_set.py", line 771, in foreach_worker
+    handle_remote_call_result_errors(remote_results, self._ignore_worker_failures)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/worker_set.py", line 78, in handle_remote_call_result_errors
+    raise r.get()
+ray.exceptions.RayTaskError(TypeError): [36mray::RolloutWorker.apply()[39m (pid=2596, ip=172.17.0.2, actor_id=8a6317226b44a8441991e94901000000, repr=<ray.rllib.evaluation.rollout_worker.RolloutWorker object at 0x7b05e26c5e80>)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/utils/actor_manager.py", line 189, in apply
+    raise e
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/utils/actor_manager.py", line 178, in apply
+    return func(self, *args, **kwargs)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/execution/rollout_ops.py", line 89, in <lambda>
+    lambda w: w.sample(), local_worker=False, healthy_only=True
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/rollout_worker.py", line 694, in sample
+    batches = [self.input_reader.next()]
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/sampler.py", line 91, in next
+    batches = [self.get_data()]
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/sampler.py", line 273, in get_data
+    item = next(self._env_runner)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/env_runner_v2.py", line 348, in run
+    outputs = self.step()
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/env_runner_v2.py", line 374, in step
+    active_envs, to_eval, outputs = self._process_observations(
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/env_runner_v2.py", line 540, in _process_observations
+    policy_id: PolicyID = episode.policy_for(agent_id)
+  File "/usr/local/lib/python3.8/dist-packages/ray/rllib/evaluation/episode_v2.py", line 119, in policy_for
+    policy_id = self._agent_to_policy[agent_id] = self.policy_mapping_fn(
+TypeError: policy_mapping_fn() takes 1 positional argument but 2 were given

@@ -1,23 +1,28 @@
-# Arquivo: /Users/orlow/dev/rl/final/getafe-ball/submission/agent.py
 import torch
 import torch.nn as nn
 import numpy as np
 import os
-from gfootball.env.players.player import Player
+
+class Player(object):
+    def __init__(self, player_config, env_config):
+        self._player_config = player_config
+        self._env_config = env_config
+
+    def take_action(self, observation):
+        raise NotImplementedError
 
 class FootballAgent(Player):
     def __init__(self, player_config, env_config):
+        # Inicializa a classe pai que definimos acima
         Player.__init__(self, player_config, env_config)
         
-        # Procura o best_model.pth na MESMA pasta deste script
+        # Caminho do modelo (mesma pasta do script)
         model_path = os.path.join(os.path.dirname(__file__), "best_model.pth")
         
-        # Detecta GPU/CPU
+        # Detecta dispositivo
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         
-        # Recria a estrutura (Compatível com o Default do RLlib PPO)
-        # Se você mudou a arquitetura no config do treino, altere aqui também.
-        # Padrão RLlib: 2 camadas ocultas de 256
+        # Define a arquitetura (tem que bater com o treino PPO)
         self.model = nn.Sequential(
             nn.Linear(115, 256),
             nn.Tanh(),
@@ -27,35 +32,29 @@ class FootballAgent(Player):
         )
         
         try:
-            print(f"Carregando modelo de: {model_path}")
             # Carrega os pesos
+            print(f"Carregando agente de: {model_path}")
             state_dict = torch.load(model_path, map_location=self.device)
             
-            # Limpeza de chaves do Ray (se necessário)
-            clean_state_dict = {}
-            for k, v in state_dict.items():
-                if "value_branch" in k: continue
-                # Remove prefixos estranhos que o Ray adiciona às vezes
-                new_key = k.replace("_hidden_layers.0.", "0.") \
-                           .replace("_hidden_layers.1.", "2.") \
-                           .replace("_logits.", "4.")
-                clean_state_dict[new_key] = v
+            # Carrega no modelo
+            self.model.load_state_dict(state_dict, strict=False)
             
-            # Tenta carregar (strict=False permite ignorar diferenças pequenas)
-            self.model.load_state_dict(clean_state_dict, strict=False)
             self.model.to(self.device)
             self.model.eval()
-            print("Agente PRONTO para jogar!")
-            
+            print("✅ Pesos carregados com sucesso!")
         except Exception as e:
-            print(f"ERRO CRÍTICO ao carregar agente: {e}")
+            print(f"❌ ERRO ao carregar pesos: {e}")
             self.model = None
 
     def take_action(self, observation):
         if self.model is None:
-            return 0 # Ação aleatória/Idle se falhar
+            return 0 # Ação nula se o modelo falhar
             
-        # Converte observação para tensor
+        # Garante que a observação seja um array numpy float32
+        if not isinstance(observation, np.ndarray):
+            observation = np.array(observation, dtype=np.float32)
+            
+        # Converte para tensor
         obs_tensor = torch.tensor(observation, dtype=torch.float32).to(self.device)
         
         with torch.no_grad():
@@ -64,5 +63,6 @@ class FootballAgent(Player):
             
         return action
 
+# Função fábrica obrigatória para o torneio
 def agent_factory(player_config, env_config):
     return FootballAgent(player_config, env_config)
